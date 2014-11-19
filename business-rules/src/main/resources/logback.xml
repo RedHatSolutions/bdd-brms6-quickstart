@@ -9,11 +9,13 @@
     </encoder>
   </appender>
   
-  <logger name="org.drools" level="DEBUG"/>
-  <logger name="org.kie" level="DEBUG"/>
-  <logger name="org.jboss" level="DEBUG"/>
+  <logger name="org.drools" level="WARN"/>
+  <logger name="org.kie" level="WARN"/>
+  <logger name="org.jboss" level="WARN"/>
+  <logger name="org.jboss.resteasy" level="WARN"/>
+  <logger name="com.google" level="ERROR"/>
   
-  <root level="INFO">
+  <root level="ERROR">
     <appender-ref ref="STDOUT" />
   </root>
 </configuration>

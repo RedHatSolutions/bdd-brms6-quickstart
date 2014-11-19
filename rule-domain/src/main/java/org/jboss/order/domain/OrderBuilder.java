@@ -15,26 +15,27 @@
 * limitations under the License.
 */
 
-package org.jboss.webapp.utils;
+package org.jboss.order.domain;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class Metrics {
-  private long start;
-  private Map<String,Long> metrics=new HashMap<String, Long>();
+public class OrderBuilder {
+  private String id;
+  private Country country;
+  private double amount;
   
-  public void start(){
-    start=System.currentTimeMillis();
+  public OrderBuilder id(String id){
+    this.id=id; return this;
   }
-  public long end(String name){
-    long result=System.currentTimeMillis()-start;
-    metrics.put(name, result);
-    start=System.currentTimeMillis();
-    return result;
+  public OrderBuilder country(Country country){
+    this.country=country; return this;
   }
-  public Long get(String name){
-    if (!metrics.containsKey(name)) return 0l;
-    return metrics.get(name);
+  public OrderBuilder amount(double amount){
+    this.amount=amount; return this;
+  }
+  public Order build(){
+    Order order=new Order(id, country, amount);
+    // set defaults
+    order.setRiskStatus("REJECT");
+    order.setRiskReason("");
+    return order;
   }
 }

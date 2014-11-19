@@ -18,53 +18,28 @@
 package org.jboss.rules.tests;
 
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertTrue;
+import org.apache.commons.lang.StringUtils;
 import org.jboss.order.domain.Country;
 import org.jboss.order.domain.Order;
+import org.jboss.order.domain.OrderBuilder;
 import org.jboss.rules.RulesTestBase;
 import org.junit.Test;
 
-public class OrderServiceRulesTest extends RulesTestBase{
-  /**
-   * Good Practices - unit tests...
-   * 1) should be self-contained
-   * 2) should re-initialise variables so one test doesn't not affect another
-   * 
-   */
-  
+public class OrderServiceRiskGuidedTest extends RulesTestBase{
   @Test
-  public void test_lowRisk() {
-    loadKieSession();
+  public void test_EuroLowValue_shouldAccept() {
+//    compileAndLoadKieSession("order.riskguided");
+    loadKieSession("order.riskguided");
     
-    Order order=new Order("1", Country.GBR, 50, new String[]{});
+    Order order=new OrderBuilder().id("1")
+      .country(Country.GBR)
+      .amount(50.00)
+      .build();
     int rules=fireAllRules(order);
     
-    assertEquals("LOW", order.getRisk());
-    assertEquals("ACCEPT", order.getRecommendation());
-    assertEquals(2, rules);
-  }
-  
-  @Test
-  public void test_highRiskG8() {
-    loadKieSession();
-    
-    Order order=new Order("1", Country.GBR, 200, new String[]{});
-    int rules=fireAllRules(order);
-    
-    assertEquals("HIGH", order.getRisk());
-    assertEquals("REJECT", order.getRecommendation());
+    assertEquals("ACCEPT", order.getRiskStatus());
+    assertTrue(StringUtils.isEmpty(order.getRiskReason()));
     assertEquals(1, rules);
-  }
-  
-  @Test
-  public void test_highRiskHighValue() {
-    loadKieSession();
-    
-    Order order=new Order("1", Country.AFG, 200, new String[]{});
-    int rules=fireAllRules(order);
-    
-    assertEquals("HIGH", order.getRisk());
-    assertEquals("REJECT", order.getRecommendation());
-    assertEquals(2, rules);
   }
 }
